@@ -1,6 +1,7 @@
 Setup:
   ✔ setup project @done(22-01-29 18:56)
   ✔ setup storybook @done(22-01-29 18:56)
+  ☐ setup emotion and theme
   Components:
     Header:
       Search:
@@ -19,3 +20,36 @@ Setup:
       ☐ preload props and request movie data via api
       ☐ Add to WatchList
 TODO:
+
+
+  detailView: {
+      heading: '#212121',
+      subHeading: '#575757',
+      description: '#7B7B7B',
+      text: '#4F4F4F',
+      divider: '#CCCCCC',
+    },
+    header: {
+      background: '#666666',
+      search: {
+        text: '#FFFFFF',
+        icon: '#FFFFFF',
+      },
+    },
+    radio: {
+      text: '#DDDDDD',
+      border: '#F1F1F1',
+      highlight: '#FFFFFF',
+    },
+    slider: {
+      text: '#DDDDDD',
+      background: '#FFFFFF',
+      highlight: '#C4C4C4',
+    },
+    list: {
+      text: '#EBEBEB',
+    },
+    button: {
+      text: '#282828',
+      border: '#585858',
+    },
