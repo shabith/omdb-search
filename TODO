@@ -1,0 +1,21 @@
+Setup:
+  ✔ setup project @done(22-01-29 18:56)
+  ✔ setup storybook @done(22-01-29 18:56)
+  Components:
+    Header:
+      Search:
+        ☐ props - onChange, delay
+      YearRange:
+        ☐ props - onChange, delay
+      TitleType:
+        ☐ props - onChange
+    TitleList:
+      ☐ resultsCount
+      ☐ watchList button
+      ItemBlock:
+        ☐ props - onClick, titleData = image:string, isInWatchList:boolean, title:string, year:string
+    DetailView:
+      ☐ props - image, title, year, imdbId
+      ☐ preload props and request movie data via api
+      ☐ Add to WatchList
+TODO:
