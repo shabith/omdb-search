@@ -1,11 +1,63 @@
 {
-	"plugins": ["@typescript-eslint"],
-  "extends": ["next/core-web-vitals", "airbnb", "airbnb-typescript", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "prettier"],
-	"parserOptions": {
-		"project": "./tsconfig.json"
-},
-	"rules": {
-		"react/react-in-jsx-scope": "off",
-		"react/function-component-definition": "off"
-	}
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "next/core-web-vitals",
+    "airbnb",
+    "airbnb-typescript",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "plugin:storybook/recommended",
+    "prettier"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "no-loop-func": 0,
+    "@typescript-eslint/no-loop-func": 1,
+    "no-redeclare": 0,
+    "@typescript-eslint/no-redeclare": 1,
+    "no-shadow": 0,
+    "@typescript-eslint/no-shadow": 1,
+    "react/react-in-jsx-scope": 0,
+    "no-restricted-exports": ["error", {
+      "restrictedNamedExports": []
+    }],
+    "react/jsx-props-no-spreading": [
+      1,
+      {
+        "custom": "ignore"
+      }
+    ],
+    "react/function-component-definition": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": ["**/*.stories.tsx", "@storybook/**"]
+      }
+    ],
+    "import/order": [
+      1,
+      {
+        "pathGroups": [
+          {
+            "pattern": "@app/**",
+            "group": "external",
+            "position": "after"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["builtin"],
+        "newlines-between": "always"
+      }
+    ],
+    "object-curly-spacing": [
+      "error",
+      "always",
+      { "arraysInObjects": true, "objectsInObjects": true }
+    ],
+    "react/require-default-props": [
+      2,
+      { "forbidDefaultForRequired": true, "ignoreFunctionalComponents": true }
+    ]
+  }
 }
