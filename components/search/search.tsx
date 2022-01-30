@@ -20,8 +20,8 @@ export default function Search({ delay = 400, onChange }: SearchProps): JSX.Elem
   const theme = useTheme();
   return (
     <SearchStyled>
-      <MagnifierIcon color={theme.colors.black} width={20} height={20} />
-      test
+      <MagnifierIcon color={theme.colors.white} width={20} height={20} />
+      <input placeholder="search" />
     </SearchStyled>
   );
 }

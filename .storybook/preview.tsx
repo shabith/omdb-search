@@ -1,4 +1,4 @@
-import { useTheme, ThemeProvider } from '@emotion/react';
+import { ThemeProvider } from '@emotion/react';
 
 import GlobalStyles from '../components/global-styles';
 import { lightTheme, darkTheme } from '../styles/themes';

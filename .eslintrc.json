@@ -33,7 +33,7 @@
     "import/no-extraneous-dependencies": [
       "error",
       {
-        "devDependencies": ["**/*.stories.tsx", "@storybook/**"]
+        "devDependencies": ["**/*.stories.tsx", "**/*.test.tsx", "@storybook/**", "jest.setup.ts"]
       }
     ],
     "import/order": [

@@ -4,4 +4,7 @@ node_modules
 public
 out
 package.json
-.eslintrc.js
+.eslintrc.json
+jest.setup.js
+jest.config.js
+test-setup.js
