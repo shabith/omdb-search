@@ -21,7 +21,7 @@
       "@app/services/*": ["services/*"],
       "@app/styles/*": ["styles/*"],
       "@app/context/*": ["context/*"],
-      "@app/utils": ["utils"],
+      "@app/utils/*": ["utils/*"],
       "@app/types": ["types"]
     },
   },

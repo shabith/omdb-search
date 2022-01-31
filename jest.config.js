@@ -20,6 +20,15 @@ const customJestConfig = {
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
   collectCoverageFrom: ['<rootDir>/components/**/*{ts,tsx}', '!**/node_modules/**', '!**/*.stories.tsx'],
+  moduleNameMapper: {
+    '^@app/components/(.*)$': '<rootDir>/components/$1',
+    '^@app/lib/(.*)$': '<rootDir>/lib/$1',
+    '^@app/services/(.*)$': '<rootDir>/services/$1',
+    '^@app/styles/(.*)$': '<rootDir>/styles/$1',
+    '^@app/context/(.*)$': '<rootDir>/context/$1',
+    '^@app/utils/(.*)$': '<rootDir>/utils/$1',
+    '^@app/types$': '<rootDir>/types',
+  },
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

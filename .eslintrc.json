@@ -12,6 +12,9 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
+  "globals": {
+    "jest": true
+  },
   "rules": {
     "no-loop-func": 0,
     "@typescript-eslint/no-loop-func": 1,
@@ -30,6 +33,7 @@
       }
     ],
     "react/function-component-definition": "off",
+    "import/prefer-default-export": 0,
     "import/no-extraneous-dependencies": [
       "error",
       {

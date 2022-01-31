@@ -1,9 +1,14 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import * as React from 'react';
 import { SVGProps, memo } from 'react';
 
 const SvgComponent = ({ color, ...restProps }: SVGProps<SVGSVGElement>) => (
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  <svg height="1em" width="1em" xmlns="http://www.w3.org/2000/svg" {...restProps}>
+  <svg
+    data-testid="magnify-icon"
+    height="1em"
+    width="1em"
+    xmlns="http://www.w3.org/2000/svg"
+    {...restProps}>
     <circle
       fill="none"
       stroke={color}

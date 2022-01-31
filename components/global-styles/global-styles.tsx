@@ -5,6 +5,7 @@ const GlobalStyles = () => {
 
   return (
     <Global
+      data-testid="global-styles"
       styles={css`
         html,
         body {

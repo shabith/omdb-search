@@ -6,9 +6,9 @@ Setup:
   Components:
     Header:
       Search:
-        ☐ props - onChange, delay
+        ✔ props - onChange, delay @done(22-01-31 01:31)
       YearRange:
-        ☐ props - onChange, delay
+        ✔ props - onChange @done(22-01-31 18:54)
       TitleType:
         ☐ props - onChange
     TitleList:

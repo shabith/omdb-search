@@ -1,4 +1,5 @@
 const path = require('path');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const toPath = (_path) => path.join(process.cwd(), _path);
 
@@ -27,6 +28,10 @@ module.exports = {
           '@emotion/styled': toPath("node_modules/@emotion/styled"),
           'emotion-theming': toPath("node_modules/@emotion/react"),
         },
+        plugins: [
+          ...(config.resolve.plugins || []),
+          new TsconfigPathsPlugin(),
+        ]
       },
     };
   },
