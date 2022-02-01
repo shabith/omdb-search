@@ -6,13 +6,12 @@ import YearsFilter from '.';
 export default {
   title: 'Design System/Years Filter',
   component: YearsFilter,
-  parameters: { actions: { argTypesRegex: '^on.*' } },
 } as ComponentMeta<typeof YearsFilter>;
 
 const Template: ComponentStory<typeof YearsFilter> = (args) => <YearsFilter {...args} />;
-export const DefaultYearsFilter = Template.bind({});
+export const Default = Template.bind({});
 
-DefaultYearsFilter.args = {
+Default.args = {
   onChange: (values: number[]) => {
     console.log('changed', values);
   },

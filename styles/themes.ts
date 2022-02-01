@@ -1,7 +1,7 @@
 const theme = {
   fonts: {
     family: {
-      body: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
+      body: "'Roboto', sans-serif",
     },
     size: {
       /** xxs - 8px */

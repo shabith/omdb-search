@@ -19,7 +19,7 @@ const customJestConfig = {
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
-  collectCoverageFrom: ['<rootDir>/components/**/*{ts,tsx}', '!**/node_modules/**', '!**/*.stories.tsx'],
+  collectCoverageFrom: ['<rootDir>/components/**/*{ts,tsx}', '<rootDir>/utils/**/*{ts,tsx}', '!**/node_modules/**', '!**/*.stories.tsx'],
   moduleNameMapper: {
     '^@app/components/(.*)$': '<rootDir>/components/$1',
     '^@app/lib/(.*)$': '<rootDir>/lib/$1',

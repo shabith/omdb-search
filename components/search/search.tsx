@@ -5,30 +5,32 @@ import { debounce } from 'lodash';
 
 import { mq } from '@app/utils/media-query';
 
-import MagnifierIcon from './magnifier-icon';
+import MagnifierIcon from './icon/magnifier';
 
 type SearchProps = {
   onChange: (value: string) => void;
   delay?: number;
+  className?: string;
 };
 
 const SearchStyled = styled.div`
   display: flex;
   align-items: center;
-  padding: ${(props) => props.theme.spacing.m}px;
+  padding: ${({ theme }) => theme.spacing.m}px;
 
   input[type='text'] {
     outline: none;
-    color: ${(props) => props.theme.colors.white};
-    font-size: ${(props) => props.theme.fonts.size.xl}px;
+    color: ${({ theme }) => theme.colors.white};
+    font-family: ${({ theme }) => theme.fonts.family.body};
+    font-size: ${({ theme }) => theme.fonts.size.xl}px;
     background: none;
     border: none;
-    margin-bottom: ${(props) => props.theme.spacing.s}px;
+    margin-bottom: ${({ theme }) => theme.spacing.s}px;
   }
 `;
 
 const IconStyled = styled(MagnifierIcon)`
-  margin-right: ${(props) => props.theme.spacing.lg}px;
+  margin-right: ${({ theme }) => theme.spacing.lg}px;
   display: none;
 
   ${mq.sm} {
@@ -36,7 +38,11 @@ const IconStyled = styled(MagnifierIcon)`
   }
 `;
 
-export default function Search({ delay = 400, onChange }: SearchProps): JSX.Element {
+export default function Search({
+  delay = 400,
+  onChange,
+  className = '',
+}: SearchProps): JSX.Element {
   const theme = useTheme();
 
   const debouncedOnChange = useMemo(() => {
@@ -53,7 +59,7 @@ export default function Search({ delay = 400, onChange }: SearchProps): JSX.Elem
   });
 
   return (
-    <SearchStyled>
+    <SearchStyled className={['search-comp', className].join(' ')}>
       <IconStyled color={theme.colors.white} width={26} height={26} />
       <input
         data-testid="search-query"

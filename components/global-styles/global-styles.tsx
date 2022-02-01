@@ -12,6 +12,7 @@ const GlobalStyles = () => {
           padding: 0;
           margin: 0;
           font-family: ${theme.fonts.family.body};
+          font-weight: 400;
         }
 
         a {

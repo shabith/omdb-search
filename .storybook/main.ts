@@ -12,6 +12,7 @@ module.exports = {
     '@storybook/addon-actions',
     '@storybook/addon-viewport',
     '@storybook/addon-measure',
+    'storybook-addon-next',
   ],
   framework: '@storybook/react',
   typescript: {

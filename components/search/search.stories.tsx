@@ -10,9 +10,9 @@ export default {
 } as ComponentMeta<typeof Search>;
 
 const Template: ComponentStory<typeof Search> = (args) => <Search {...args} />;
-export const DefaultSearch = Template.bind({});
+export const Default = Template.bind({});
 
-DefaultSearch.args = {
+Default.args = {
   onChange: (str: string) => {
     console.log('changed', str);
   },

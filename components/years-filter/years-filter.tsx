@@ -3,16 +3,30 @@ import { useState } from 'react';
 import { Range, getTrackBackground } from 'react-range';
 import { IRenderThumbParams, IRenderTrackParams } from 'react-range/lib/types';
 
+import { mq } from '@app/utils/media-query';
+
 const YearsFilterStyled = styled.div`
   display: flex;
-  width: 225px;
+  width: calc(100% - ${({ theme }) => theme.spacing.m * 2}px);
   flex-direction: column;
+  margin: ${({ theme }) => theme.spacing.m}px;
+  margin-bottom: ${({ theme }) => theme.spacing.lg}px;
+
+  ${mq.md} {
+    width: 225px;
+  }
 
   .label {
-    color: ${(props) => props.theme.colors.gray[300]};
+    color: ${({ theme }) => theme.colors.gray[300]};
     text-transform: uppercase;
-    font-size: ${(props) => props.theme.fonts.size.m}px;
-    margin-bottom: ${(props) => props.theme.spacing.lg}px;
+    font-size: ${({ theme }) => theme.fonts.size.s}px;
+    margin-bottom: ${({ theme }) => theme.spacing.lg}px;
+    text-align: center;
+
+    ${mq.md} {
+      text-align: left;
+      font-size: ${({ theme }) => theme.fonts.size.m}px;
+    }
   }
 
   .range-wrapper {
@@ -29,13 +43,17 @@ const YearsFilterStyled = styled.div`
     }
 
     .range-label {
-      color: ${(props) => props.theme.colors.gray[300]};
-      margin-right: ${(props) => props.theme.spacing.lg}px;
-      font-size: ${(props) => props.theme.fonts.size.m}px;
+      color: ${({ theme }) => theme.colors.gray[300]};
+      margin-right: ${({ theme }) => theme.spacing.lg}px;
+      font-size: ${({ theme }) => theme.fonts.size.s}px;
+
+      ${mq.md} {
+        font-size: ${({ theme }) => theme.fonts.size.m}px;
+      }
 
       &.right {
         margin-right: 0 !important;
-        margin-left: ${(props) => props.theme.spacing.lg}px;
+        margin-left: ${({ theme }) => theme.spacing.lg}px;
       }
     }
   }
@@ -44,26 +62,26 @@ const YearsFilterStyled = styled.div`
 const SliderTrack = styled.div`
   width: 100%;
   height: 8px;
-  border-radius: ${(props) => props.theme.borderRadius.s}px;
-  background-color: ${(props) => props.theme.colors.white};
+  border-radius: ${({ theme }) => theme.borderRadius.s}px;
+  background-color: ${({ theme }) => theme.colors.white};
 `;
 
 const SliderToolTip = styled.div`
   position: absolute;
   top: -28px;
-  color: ${(props) => props.theme.colors.black};
+  color: ${({ theme }) => theme.colors.black};
   font-weight: bold;
-  font-size: ${(props) => props.theme.fonts.size.s}px;
-  padding: ${(props) => props.theme.spacing.xs}px;
-  border-radius: ${(props) => props.theme.borderRadius.s}px;
-  background-color: ${(props) => props.theme.colors.white};
+  font-size: ${({ theme }) => theme.fonts.size.s}px;
+  padding: ${({ theme }) => theme.spacing.xs}px;
+  border-radius: ${({ theme }) => theme.borderRadius.s}px;
+  background-color: ${({ theme }) => theme.colors.white};
 `;
 
 const SliderThumb = styled.div<{ isDragged: boolean }>`
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background-color: ${(props) => props.theme.colors.gray[600]};
+  background-color: ${({ theme }) => theme.colors.gray[600]};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -73,7 +91,7 @@ const SliderThumb = styled.div<{ isDragged: boolean }>`
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background-color: ${(props) => props.theme.colors.gray[1200]};
+    background-color: ${({ theme }) => theme.colors.gray[1200]};
     display: ${({ isDragged }) => (isDragged ? 'block' : 'none')};
   }
 
@@ -90,7 +108,7 @@ type SliderTrackFillProps = {
 
 const SliderTrackFill = styled.div<SliderTrackFillProps>`
   width: 100%;
-  border-radius: ${(props) => props.theme.borderRadius.s}px;
+  border-radius: ${({ theme }) => theme.borderRadius.s}px;
   height: 8px;
   align-self: center;
   background: ${(props) =>
@@ -104,14 +122,17 @@ const SliderTrackFill = styled.div<SliderTrackFillProps>`
 
 type YearsFilterProps = {
   onChange: (values: number[]) => void;
+  className?: string;
 };
 
-export default function YearsFilter({ onChange }: YearsFilterProps): JSX.Element {
+export default function YearsFilter({ onChange, className }: YearsFilterProps): JSX.Element {
   const [values, setValues] = useState<number[]>([1985, 2005]);
   const minMaxValues: [number, number] = [1970, 2015];
 
   return (
-    <YearsFilterStyled data-testid="years-filter">
+    <YearsFilterStyled
+      className={['years-filter-comp', className].join(' ')}
+      data-testid="years-filter">
       <div className="label">Year</div>
       <div className="range-wrapper">
         <div className="range-label">{minMaxValues[0]}</div>

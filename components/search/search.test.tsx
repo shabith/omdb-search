@@ -5,13 +5,13 @@ import userEvent from '@testing-library/user-event';
 import { sleep } from '@app/utils/sleep';
 
 import * as stories from './search.stories';
-import MagnifierIcon from './magnifier-icon';
+import MagnifierIcon from './icon/magnifier';
 
-const { DefaultSearch } = composeStories(stories);
+const { Default } = composeStories(stories);
 
 describe('Search Component', () => {
   it('Should render component successfully', () => {
-    const { getByPlaceholderText } = render(<DefaultSearch {...DefaultSearch.args} />);
+    const { getByPlaceholderText } = render(<Default {...Default.args} />);
 
     const searchInput = getByPlaceholderText('Type title to search');
     expect(searchInput).toBeInTheDocument();
@@ -24,10 +24,17 @@ describe('Search Component', () => {
     expect(searchInput).toBeInTheDocument();
   });
 
+  it('Should have provided class name', () => {
+    const { container } = render(<Default {...Default.args} className="custom" />);
+
+    const searchInput = container.querySelector('.custom');
+    expect(searchInput).toBeInTheDocument();
+  });
+
   it('Should call onChange after 300ms after typing', async () => {
     const mockCallBack = jest.fn();
     const { getByTestId } = render(
-      <DefaultSearch {...DefaultSearch.args} onChange={mockCallBack} delay={300} />,
+      <Default {...Default.args} onChange={mockCallBack} delay={300} />,
     );
     const input = getByTestId('search-query');
     userEvent.type(input, 'S');

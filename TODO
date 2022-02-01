@@ -10,16 +10,18 @@ Setup:
       YearRange:
         ✔ props - onChange @done(22-01-31 18:54)
       TitleType:
-        ☐ props - onChange
+        ✔ props - onChange @done(22-01-31 23:56)
+      Button:
+        ☐ props - onClick, toggleMode, isSelected
     TitleList:
       ☐ resultsCount
-      ☐ watchList button
+      ☐ show watchList button
       ItemBlock:
         ☐ props - onClick, titleData = image:string, isInWatchList:boolean, title:string, year:string
     DetailView:
       ☐ props - image, title, year, imdbId
       ☐ preload props and request movie data via api
-      ☐ Add to WatchList
+      ☐ Add/Remove from WatchList (toggle button)
 
 TODO:
 
