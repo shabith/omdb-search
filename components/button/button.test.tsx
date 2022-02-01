@@ -10,6 +10,8 @@ const {
   WithIcon,
   ToggleModeSingleIcon,
   ToggleModeMultipleIcons,
+  WithoutIconDisabled,
+  WithoutIconLoading,
 } = composeStories(stories);
 
 describe('Button Component', () => {
@@ -49,6 +51,15 @@ describe('Button Component', () => {
     const button = getByTestId('button-comp');
     expect(button.querySelectorAll('svg').length).toBe(1);
     expect(button).toBeInTheDocument();
+  });
+
+  it('Should update active mode in toggle button', () => {
+    const { getByTestId } = render(
+      <ToggleModeMultipleIcons {...ToggleModeMultipleIcons.args} isActive />,
+    );
+
+    const icon = getByTestId('bookmark-added-icon');
+    expect(icon).toBeInTheDocument();
   });
 
   it('Should called onClicked event on `toggle disabled` button click', async () => {
@@ -96,7 +107,31 @@ describe('Button Component', () => {
 
     const icon = getByTestId('bookmark-added-icon');
     expect(icon).toBeInTheDocument();
+  });
 
+  it('Should not allow to click on disabled button', async () => {
+    const mockCallBack = jest.fn();
+    const { getByTestId } = render(
+      <WithoutIconDisabled {...WithoutIconDisabled.args} onClick={mockCallBack} />,
+    );
+    const button = getByTestId('button-comp');
+    userEvent.click(button);
+    await waitFor(() => {
+      expect(mockCallBack).not.toBeCalled();
+    });
+    jest.clearAllMocks();
+  });
+
+  it('Should not allow to click on loading button', async () => {
+    const mockCallBack = jest.fn();
+    const { getByTestId } = render(
+      <WithoutIconLoading {...WithoutIconLoading.args} onClick={mockCallBack} />,
+    );
+    const button = getByTestId('button-comp');
+    userEvent.click(button);
+    await waitFor(() => {
+      expect(mockCallBack).not.toBeCalled();
+    });
     jest.clearAllMocks();
   });
 });

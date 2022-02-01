@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 
 import { mq } from '@app/utils/media-query';
@@ -17,15 +17,21 @@ const ButtonStyled = styled.button`
   box-shadow: none;
   transform: scale(1);
   transition: all 200ms ease-out;
+  opacity: 1;
 
-  &:focus,
-  &:hover {
+  &:not([disabled]):focus,
+  &:not([disabled]):hover {
     box-shadow: 0px 0px 15px -3px rgba(0, 0, 0, 0.2);
   }
 
   &:active {
     transform: scale(0.98);
     box-shadow: none;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
   ${mq.md} {
@@ -56,10 +62,22 @@ interface ButtonProps {
   className?: string;
   onClick?: (isToggled?: boolean) => void;
   toggleMode?: boolean;
+  isActive?: boolean;
+  loading?: boolean;
+  disabled?: boolean;
 }
 
-const Button = ({ icons, onClick, label, className = '', toggleMode = false }: ButtonProps) => {
-  const [toggle, setToggle] = useState(false);
+const Button = ({
+  icons,
+  onClick,
+  label,
+  className = '',
+  toggleMode = false,
+  isActive = false,
+  loading = false,
+  disabled = false,
+}: ButtonProps) => {
+  const [toggle, setToggle] = useState(isActive);
   const clickHandler = () => {
     if (toggleMode) {
       setToggle((curValue) => {
@@ -87,14 +105,19 @@ const Button = ({ icons, onClick, label, className = '', toggleMode = false }: B
 
   const toggledClass = toggle ? 'button-comp--active' : '';
 
+  useEffect(() => {
+    setToggle(isActive);
+  }, [isActive]);
+
   return (
     <ButtonStyled
       type="button"
       data-testid="button-comp"
       className={['button-comp', className, toggledClass].join(' ')}
+      disabled={loading || disabled}
       onClick={clickHandler}>
       {getIcon()}
-      {label}
+      {loading ? '...' : label}
     </ButtonStyled>
   );
 };

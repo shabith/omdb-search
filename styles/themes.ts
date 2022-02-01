@@ -17,11 +17,13 @@ const theme = {
       /** xl - 24px */
       xl: 24,
       /** xxl - 32px */
-      xxl: 32,
+      xxl: 40,
     },
     lineHeight: {
       /** normal - 1.2 */
       normal: 1.2,
+      /* medium - 1.6 */
+      medium: 1.6,
       /** large - 2 */
       large: 2,
     },
