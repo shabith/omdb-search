@@ -6,7 +6,7 @@ export const breakpoints = {
   xxl: 1400,
 };
 
-type Mq = keyof typeof breakpoints;
+export type Mq = keyof typeof breakpoints;
 export const mq = Object.keys(breakpoints)
   .map((key) => [key, breakpoints[key as Mq]] as [Mq, number])
   .reduce((prev, [key, breakpoint]) => {
