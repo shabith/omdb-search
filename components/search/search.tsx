@@ -4,8 +4,7 @@ import styled from '@emotion/styled';
 import { debounce } from 'lodash';
 
 import { mq } from '@app/utils/media-query';
-
-import MagnifierIcon from './icon/magnifier';
+import MagnifierIcon from '@app/components/icon/magnifier';
 
 type SearchProps = {
   onChange: (value: string) => void;

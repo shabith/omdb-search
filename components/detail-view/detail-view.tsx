@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { PropsWithChildren, useState } from 'react';
 import styled from '@emotion/styled';
 import Image from 'next/image';
 import Skeleton from 'react-loading-skeleton';
@@ -8,11 +8,24 @@ import Button from '@app/components/button';
 import BookmarkIcon from '@app/components/icon/bookmark';
 import BookmarkAddedIcon from '@app/components/icon/bookmark-added';
 import { mq } from '@app/utils/media-query';
+import useMediaQuery from '@app/lib/use-media-query';
 
 const DetailViewStyled = styled.article`
   display: flex;
+  width: 100%;
+  max-width: 750px;
+  background: ${({ theme }) => theme.colors.white};
   padding: ${({ theme }) => theme.spacing.lg}px;
   flex-direction: column;
+
+  .back-btn-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin: ${({ theme }) => theme.spacing.lg}px 0;
+    ${mq.md} {
+      display: none;
+    }
+  }
 
   .top-wrapper {
     display: flex;
@@ -90,6 +103,12 @@ const DetailViewStyled = styled.article`
             text-align: left;
           }
 
+          &.--loading {
+            ${mq.md} {
+              flex-direction: column;
+            }
+          }
+
           > div {
             font-size: ${({ theme }) => theme.fonts.size.m}px;
             color: ${({ theme }) => theme.colors.gray[900]};
@@ -148,6 +167,17 @@ const DetailViewStyled = styled.article`
         flex-direction: row;
       }
 
+      &.--loading {
+        > span {
+          ${mq.md} {
+            display: flex;
+            width: 100%;
+            margin-top: ${({ theme }) => theme.spacing.xl}px;
+            justify-content: space-around;
+          }
+        }
+      }
+
       .rating-element {
         display: flex;
         align-items: center;
@@ -184,8 +214,31 @@ const DetailViewStyled = styled.article`
   }
 `;
 
-export default function DetailView(): JSX.Element {
-  const [loading] = useState(false);
+const RatingSkeletonStyled = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: ${({ theme }) => theme.spacing.xxl}px 0;
+
+  ${mq.md} {
+    margin-top: 0;
+  }
+`;
+
+function RatingSkeletonInlineWrapper({ children }: PropsWithChildren<unknown>) {
+  return <RatingSkeletonStyled>{children}</RatingSkeletonStyled>;
+}
+
+type DetailViewProps = {
+  loading?: boolean;
+  onClose?: () => void;
+};
+
+export default function DetailView({
+  loading: isLoading = false,
+  onClose = () => {},
+}: DetailViewProps): JSX.Element {
+  const [loading] = useState(isLoading);
+  const mediumScreenSizeUp = useMediaQuery(mq.md.split('@media ')[1]);
   const title = 'Star Wars: Episode IV - A New Hope';
   const year = '1977';
   const posterImage =
@@ -210,8 +263,12 @@ export default function DetailView(): JSX.Element {
       value: '90/100',
     },
   ];
+
   return (
     <DetailViewStyled data-testid="detail-view-comp">
+      <div className="back-btn-wrapper">
+        <Button label="Close" onClick={onClose} />
+      </div>
       <div className="top-wrapper">
         <div className="image-wrapper">
           <Image alt={title} src={posterImage} layout="fill" objectFit="cover" />
@@ -222,14 +279,15 @@ export default function DetailView(): JSX.Element {
               label="Watchlist"
               toggleMode
               isActive={false}
+              loading={loading}
               icons={[<BookmarkIcon />, <BookmarkAddedIcon />]}
             />
           </div>
           <div className="content-wrapper">
             <h1>{title}</h1>
-            <div className="sub-heading">
+            <div className={['sub-heading', loading ? '--loading' : ''].join(' ')}>
               {loading ? (
-                <Skeleton />
+                <Skeleton count={mediumScreenSizeUp ? 1 : 4} />
               ) : (
                 <>
                   <div className="rated">
@@ -247,9 +305,14 @@ export default function DetailView(): JSX.Element {
       </div>
       <div className="mid-wrapper">{loading ? <Skeleton count={3} /> : plot}</div>
       <div className="bottom-wrapper">
-        <div className="rating-wrapper">
+        <div className={['rating-wrapper', loading ? '--loading' : ''].join(' ')}>
           {loading ? (
-            <Skeleton count={3} inline width={90} />
+            <Skeleton
+              count={3}
+              inline={mediumScreenSizeUp}
+              width={mediumScreenSizeUp ? 90 : '50%'}
+              wrapper={RatingSkeletonInlineWrapper}
+            />
           ) : (
             <>
               {rating.map((rate) => (

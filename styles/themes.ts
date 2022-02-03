@@ -83,6 +83,16 @@ const theme = {
     white: '#FFFFFF',
     /* black - #111111 */
     black: '#111111',
+    yellow: {
+      100: '#fff3cd',
+      200: '#ffeeba',
+      300: '#856404',
+    },
+    blue: {
+      100: '#cce5ff',
+      200: '#b8daff',
+      300: '#004085',
+    },
   },
   darkMode: false,
   name: 'light',

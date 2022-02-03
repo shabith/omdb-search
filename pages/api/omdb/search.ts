@@ -1,49 +1,75 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-type Data = {
-  results: SearchItem[];
+import { ListItem, ApiResponse, ApiResponseSuccessType } from '@app/types';
+
+type ResponseData = {
+  results: ListItem[];
+  nextPage?: number;
   total: number;
 };
 
-export interface SearchItem {
-  Title: string;
-  Year: string;
-  imdbID: string;
-  Type: string;
-  Poster: string;
-}
-
-export interface RootObject {
-  Search: SearchItem[];
-  totalResults: string;
-  Response: string;
-}
-
-export default async function SearchHandler(req: NextApiRequest, res: NextApiResponse<Data>) {
-  const currentPromises: Promise<Response>[] = [];
-  let results: SearchItem[] = [];
-  const apiUrl = `${process.env.OMDB_API_URL}/?apikey=${process.env.OMDB_API_KEY}&`;
-
-  for (let k = 0; k <= 45; k += 1) {
-    currentPromises.push(fetch(`${apiUrl}s=star%20wars&y=${1970 + k}`));
-  }
-
-  const responses = await Promise.all(currentPromises);
-  const datas: any[] = [];
-  for (let t = 0; t < responses.length; t += 1) {
-    const data = responses[t].json();
-    datas.push(data);
-  }
-
-  const values = await Promise.all(datas);
-  for (let r = 0; r < values.length; r += 1) {
-    if (values[r].Response === 'True') {
-      console.log(values[r].Search.length, values[r].url);
-      console.log(results.length);
-      results = [...results, ...values[r].Search];
-      console.log(results.length);
+export default async function SearchHandler(
+  req: NextApiRequest,
+  res: NextApiResponse<ApiResponse<ApiResponseSuccessType<ResponseData>>>,
+) {
+  const { query, type, year, page = '1' } = req.query as Record<string, string | undefined>;
+  let apiUrl = `${process.env.OMDB_API_URL}/?apikey=${process.env.OMDB_API_KEY}&`;
+  const perPage = 10;
+  const getNextPage = (totalCount: number) => {
+    const numberOfPages = Math.ceil(totalCount / perPage);
+    let nextPage = 0;
+    if (parseInt(page, 10) < numberOfPages) {
+      nextPage = parseInt(page, 10) + 1;
     }
-  }
+    return nextPage;
+  };
 
-  res.status(200).json({ results, total: results.length });
+  try {
+    if (query === '' || query === undefined) {
+      throw Error('Please enter search query');
+    } else {
+      apiUrl += `s=${query}&`;
+    }
+    if (type !== 'any' && type !== undefined) {
+      apiUrl += `type=${type}&`;
+    }
+    if (year) {
+      apiUrl += `y=${year}&`;
+    }
+    if (page) {
+      apiUrl += `page=${page}&`;
+    }
+    apiUrl += `r=json&v=1`;
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+    });
+    const data = await response.json();
+    if (data.Response === 'False') {
+      throw new Error(data.Error || 'Something went wrong');
+    } else {
+      const searchResults: ListItem[] = [];
+      data.Search.forEach((item: any) => {
+        searchResults.push({
+          title: item.Title,
+          id: item.imdbID,
+          year: item.Year,
+          type: item.Type,
+          imdbId: item.imdbID,
+          posterImage: item.Poster === 'N/A' ? '' : item.Poster,
+        });
+      });
+
+      res.status(200).json({
+        success: true,
+        data: {
+          results: searchResults,
+          total: parseInt(data.totalResults, 10),
+          nextPage: getNextPage(data.totalResults),
+          message: 'success',
+        },
+      });
+    }
+  } catch (error: any) {
+    res.status(400).json({ success: false, error: { message: error.message } });
+  }
 }

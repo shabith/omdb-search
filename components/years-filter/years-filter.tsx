@@ -123,11 +123,20 @@ const SliderTrackFill = styled.div<SliderTrackFillProps>`
 type YearsFilterProps = {
   onChange: (values: number[]) => void;
   className?: string;
+  min?: number;
+  max?: number;
+  defaultValue?: number[];
 };
 
-export default function YearsFilter({ onChange, className }: YearsFilterProps): JSX.Element {
-  const [values, setValues] = useState<number[]>([1985, 2005]);
-  const minMaxValues: [number, number] = [1970, 2015];
+export default function YearsFilter({
+  onChange,
+  className,
+  min = 1970,
+  max = 2015,
+  defaultValue = [1985, 2005],
+}: YearsFilterProps): JSX.Element {
+  const [values, setValues] = useState<number[]>(defaultValue);
+  const minMaxValues: [number, number] = [min, max];
 
   return (
     <YearsFilterStyled

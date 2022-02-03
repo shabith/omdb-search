@@ -15,7 +15,7 @@ export const ActiveListItem = Template.bind({});
 Default.args = {
   active: false,
   data: {
-    id: 1,
+    id: '1',
     title: 'Star Wars: Episode IV - A New Hope',
     year: '1977',
     type: 'movie',

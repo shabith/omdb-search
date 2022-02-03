@@ -6,7 +6,7 @@ export enum TitleTypes {
 }
 
 export type ListItem = {
-  id: number;
+  id: string;
   title: string;
   year: string;
   imdbId: string;

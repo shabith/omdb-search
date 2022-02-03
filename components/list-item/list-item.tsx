@@ -7,7 +7,6 @@ import { mq } from '@app/utils/media-query';
 const ListItemStyled = styled.article<{ active: boolean }>`
   display: flex;
   width: 100%;
-  max-width: 440px;
   padding: ${({ theme }) => theme.spacing.s + 4}px ${({ theme }) => theme.spacing.s}px;
   background: ${({ theme, active }) => (active ? theme.colors.gray[100] : theme.colors.white)};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray[500]};
@@ -57,14 +56,19 @@ const ListItemStyled = styled.article<{ active: boolean }>`
   }
 `;
 
-type ListItemProps = { data: ListItemType; active?: boolean };
+type ListItemProps = {
+  data: ListItemType;
+  active?: boolean;
+  onClick?: (imdbId: string) => void;
+};
 
 export default function ListItem({
-  data: { title, year, posterImage },
+  data: { title, year, posterImage, imdbId },
   active = false,
+  onClick = () => {},
 }: ListItemProps): JSX.Element {
   return (
-    <ListItemStyled active={active} data-testid="list-item-comp">
+    <ListItemStyled active={active} data-testid="list-item-comp" onClick={() => onClick(imdbId)}>
       <div className="image-wrapper">
         <Image alt={title} src={posterImage} layout="fill" objectFit="cover" />
       </div>

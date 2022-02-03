@@ -3,9 +3,9 @@ import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { sleep } from '@app/utils/sleep';
+import MagnifierIcon from '@app/components/icon/magnifier';
 
 import * as stories from './search.stories';
-import MagnifierIcon from './icon/magnifier';
 
 const { Default } = composeStories(stories);
 

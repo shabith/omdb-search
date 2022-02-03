@@ -12,7 +12,7 @@ const ButtonStyled = styled.button`
   display: flex;
   align-items: center;
   cursor: pointer;
-  background: transparent;
+  background: ${({ theme }) => theme.colors.white};
   border-radius: ${({ theme }) => theme.borderRadius.s}px;
   box-shadow: none;
   transform: scale(1);
@@ -58,7 +58,7 @@ const ButtonStyled = styled.button`
 
 interface ButtonProps {
   label: string;
-  icons?: [React.ReactNode, React.ReactNode?];
+  icons?: [JSX.Element, JSX.Element?];
   className?: string;
   onClick?: (isToggled?: boolean) => void;
   toggleMode?: boolean;

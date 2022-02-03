@@ -1,16 +1,25 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
+import styled from '@emotion/styled';
 
-import Search from '@app/components/search';
+import Header from '@app/components/header';
 import YearsFilter from '@app/components/years-filter';
 
-const Home: NextPage = () => {
+const AppStyled = styled.main``;
+
+const App: NextPage = () => {
   return (
-    <div>
-      <Search onChange={(str) => console.log(str)} />
-      <YearsFilter onChange={() => console.log('s')} />
-    </div>
+    <AppStyled>
+      <Head>
+        <title>OMDB Search</title>
+        <meta
+          name="description"
+          content="OMDB Search - Find more about your favourite Movie, Series or Episode"
+        />
+      </Head>
+      <Header />
+    </AppStyled>
     // <div className={styles.container}>
     //   <Head>
     //     <title>Create Next App</title>
@@ -66,4 +75,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default App;

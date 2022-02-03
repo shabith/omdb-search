@@ -37,17 +37,22 @@ const TypeFilterStyled = styled.div`
 `;
 
 type TypeFilterProps = {
-  onChange: (value: string) => void;
+  onChange: (value: TitleTypes) => void;
   className?: string;
+  defaultValue?: string;
 };
 
-export default function TypeFilter({ onChange, className = '' }: TypeFilterProps): JSX.Element {
+export default function TypeFilter({
+  onChange,
+  className = '',
+  defaultValue = TitleTypes.any,
+}: TypeFilterProps): JSX.Element {
   const types = Object.values(TitleTypes);
-  const [selected, setSelected] = useState<string>(TitleTypes.any);
+  const [selected, setSelected] = useState<string>(defaultValue);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSelected(event.target.value);
-    onChange(event.target.value);
+    onChange(event.target.value as TitleTypes);
   };
 
   return (
