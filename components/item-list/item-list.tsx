@@ -8,6 +8,7 @@ import BookMarkIcon from '@app/components/icon/bookmark';
 import SearchItem from '@app/components/list-item';
 import { ListItem } from '@app/types';
 import { mq } from '@app/utils/media-query';
+import { StoreSearchResults, useStore } from '@app/context/use-store';
 
 const ItemListStyled = styled.div`
   display: flex;
@@ -48,90 +49,6 @@ const ItemListStyled = styled.div`
     overflow: auto;
   }
 `;
-const filterItems: ListItem[] = [];
-const filterItesms: ListItem[] = [
-  {
-    id: 'tt0076759',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-  {
-    id: 'tt0076760',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-  {
-    id: 'tt0076761',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-  {
-    id: 'tt0076762',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-  {
-    id: 'tt0076763',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-  {
-    id: 'tt0076764',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-  {
-    id: 'tt0076765',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-  {
-    id: 'tt0076766',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-  {
-    id: 'tt0076767',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-];
 
 const ListItemSkeletonStyled = styled.div`
   display: flex;
@@ -191,56 +108,61 @@ const InfoBoxStyled = styled.div<{ warning: boolean }>`
   font-size: ${({ theme }) => theme.fonts.size.m}px;
   font-weight: 300;
   padding: ${({ theme }) => theme.spacing.m}px;
-  color: ${({ theme, warning }) => (warning ? theme.colors.yellow[300] : theme.colors.blue[300])};
+  color: ${({ theme, warning }) => (warning ? theme.colors.red[300] : theme.colors.blue[300])};
   background-color: ${({ theme, warning }) =>
-    warning ? theme.colors.yellow[100] : theme.colors.blue[100]};
+    warning ? theme.colors.red[100] : theme.colors.blue[100]};
   border-color: ${({ theme, warning }) =>
-    warning ? theme.colors.yellow[200] : theme.colors.blue[200]};
+    warning ? theme.colors.red[200] : theme.colors.blue[200]};
   text-align: center;
 `;
-const Instructions = ({ warning = false }: { warning: boolean }) => (
+
+type InstructionsProps = {
+  warning?: boolean;
+  message?: string;
+};
+
+const Instructions = ({
+  warning = false,
+  message = 'Sorry no results were found.',
+}: InstructionsProps) => (
   <InfoBoxStyled data-testid={warning ? 'warning-message' : 'info-message'} warning={warning}>
-    {warning ? `Sorry no results were found.` : `Search by typing in the search box.`}
+    {warning ? message : `Search by typing in the search box.`}
   </InfoBoxStyled>
 );
-const getResults = (items: ListItem[], dirty: boolean) => {
-  return items.length > 0 ? (
+const getResults = (searchResults: StoreSearchResults) => {
+  return searchResults.data && searchResults.data?.length > 0 ? (
     <>
-      {items.map((item) => (
+      {searchResults.data.map((item) => (
         <SearchItem key={item.id} data={item} />
       ))}
     </>
   ) : (
-    <Instructions warning={dirty} />
+    <Instructions
+      warning={!searchResults.success}
+      message={!searchResults.success ? searchResults.error : undefined}
+    />
   );
 };
 
-type ItemListProps = {
-  loading?: boolean;
-  isDirty?: boolean;
+const searchResultsCount = ({ success, total }: StoreSearchResults) => {
+  return success ? <div>{total} Results</div> : null;
 };
 
-export default function ItemList({
-  loading: isLoading = false,
-  isDirty: isDirtyList = false,
-}: ItemListProps): JSX.Element {
-  const [loading] = useState(isLoading);
-  const [isDirty] = useState(isDirtyList);
+export default function ItemList(): JSX.Element {
+  const { isSearching, searchResults } = useStore();
 
   return (
     <ItemListStyled data-testid="item-list-comp">
       <div className="item-list-header">
-        {isDirty && (
-          <div className="search-results-count">
-            {loading ? <Skeleton width={30} inline /> : filterItems.length} Results
-          </div>
-        )}
+        <div className="search-results-count">
+          {isSearching ? <Skeleton width={30} inline /> : searchResultsCount(searchResults)}
+        </div>
         <div className="watchlist-button-wrapper">
           <Button label="Go to Watchlist" icons={[<BookMarkIcon />]} />
         </div>
       </div>
       <div className="item-list-wrapper">
-        {loading ? <ListItemSkeleton count={3} /> : getResults(filterItems, isDirty)}
+        {isSearching ? <ListItemSkeleton count={3} /> : getResults(searchResults)}
       </div>
     </ItemListStyled>
   );

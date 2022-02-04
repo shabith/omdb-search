@@ -14,7 +14,16 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ThemeProvider theme={lightTheme}>
         <GlobalStyles />
         <Component {...pageProps} />
-        <ToastContainer />
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeButton
+          pauseOnFocusLoss
+          pauseOnHover
+          draggable
+        />
       </ThemeProvider>
     </StoreProvider>
   );

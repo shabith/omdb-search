@@ -93,6 +93,11 @@ const theme = {
       200: '#b8daff',
       300: '#004085',
     },
+    red: {
+      100: '#f8d7da',
+      200: '#f5c6cb',
+      300: '#721c24',
+    },
   },
   darkMode: false,
   name: 'light',

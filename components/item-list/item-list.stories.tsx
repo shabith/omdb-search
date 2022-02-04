@@ -8,14 +8,5 @@ export default {
   component: ItemList,
 } as ComponentMeta<typeof ItemList>;
 
-const Template: ComponentStory<typeof ItemList> = (args) => <ItemList {...args} />;
+const Template: ComponentStory<typeof ItemList> = () => <ItemList />;
 export const Default = Template.bind({});
-export const LoadingList = Template.bind({});
-
-Default.args = {
-  isDirty: true,
-};
-
-LoadingList.args = {
-  loading: true,
-};

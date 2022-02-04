@@ -81,7 +81,7 @@ const SliderThumb = styled.div<{ isDragged: boolean }>`
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background-color: ${({ theme }) => theme.colors.gray[600]};
+  background-color: ${({ theme }) => theme.colors.gray[500]};
   display: flex;
   justify-content: center;
   align-items: center;

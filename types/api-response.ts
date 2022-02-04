@@ -1,3 +1,17 @@
+import { DetailItem } from './detail-item';
+import { ListItem } from './list-item';
+
+export type DetailResponseData = {
+  result: DetailItem;
+};
+
+export type SearchResponseData = {
+  results: ListItem[];
+  nextPage: number;
+  total: number;
+  currentPage: number;
+};
+
 export type ResponseErrorType = {
   message: string;
 };

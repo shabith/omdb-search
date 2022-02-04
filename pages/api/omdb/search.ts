@@ -1,16 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { ListItem, ApiResponse, ApiResponseSuccessType } from '@app/types';
-
-type ResponseData = {
-  results: ListItem[];
-  nextPage?: number;
-  total: number;
-};
+import { ListItem, ApiResponse, ApiResponseSuccessType, SearchResponseData } from '@app/types';
 
 export default async function SearchHandler(
   req: NextApiRequest,
-  res: NextApiResponse<ApiResponse<ApiResponseSuccessType<ResponseData>>>,
+  res: NextApiResponse<ApiResponse<ApiResponseSuccessType<SearchResponseData>>>,
 ) {
   const { query, type, year, page = '1' } = req.query as Record<string, string | undefined>;
   let apiUrl = `${process.env.OMDB_API_URL}/?apikey=${process.env.OMDB_API_KEY}&`;
@@ -65,6 +59,7 @@ export default async function SearchHandler(
           results: searchResults,
           total: parseInt(data.totalResults, 10),
           nextPage: getNextPage(data.totalResults),
+          currentPage: parseInt(page, 10),
           message: 'success',
         },
       });

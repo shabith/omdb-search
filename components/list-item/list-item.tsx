@@ -4,6 +4,8 @@ import styled from '@emotion/styled';
 import { ListItem as ListItemType } from '@app/types';
 import { mq } from '@app/utils/media-query';
 
+const imagePlaceholder = '/placeholder.jpg';
+
 const ListItemStyled = styled.article<{ active: boolean }>`
   display: flex;
   width: 100%;
@@ -70,7 +72,7 @@ export default function ListItem({
   return (
     <ListItemStyled active={active} data-testid="list-item-comp" onClick={() => onClick(imdbId)}>
       <div className="image-wrapper">
-        <Image alt={title} src={posterImage} layout="fill" objectFit="cover" />
+        <Image alt={title} src={posterImage || imagePlaceholder} layout="fill" objectFit="cover" />
       </div>
       <div className="content-wrapper">
         <h3>{title}</h3>

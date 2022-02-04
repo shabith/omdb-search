@@ -32,14 +32,13 @@ const HeaderStyled = styled.header`
 `;
 
 export default function Header(): JSX.Element {
-  const { searchTitle, isSearching, initialValues } = useStore();
+  const { searchTitle, initialValues } = useStore();
   const [query, setQuery] = useState<string>('');
   const [year, setYear] = useState<number[]>(initialValues.year || []);
   const [type, setType] = useState<keyof typeof TitleTypes>(initialValues.type);
 
   useEffect(() => {
     if (query !== '') {
-      console.log('searchTitle');
       searchTitle({
         query,
         year,
@@ -47,20 +46,6 @@ export default function Header(): JSX.Element {
       });
     }
   }, [query, year, type, searchTitle]);
-
-  // const updateSearch = (
-  //   value: string | number | TitleTypes,
-  //   queryType: 'search' | 'year' | 'type',
-  // ) => {
-  //   setSearchQueries((q) => ({ ...q, ...{ [queryType]: value } }));
-  //   searchTitle({
-  //     query,
-  //     year,
-  //     type,
-  //   });
-  // };
-
-  console.log('isSearching', isSearching);
 
   return (
     <HeaderStyled data-testid="header-comp">

@@ -1,14 +1,23 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
 import styled from '@emotion/styled';
 
 import Header from '@app/components/header';
-import YearsFilter from '@app/components/years-filter';
+import ItemList from '@app/components/item-list/item-list';
+import DetailView from '@app/components/detail-view/detail-view';
+import { useStore } from '@app/context/use-store';
 
 const AppStyled = styled.main``;
 
+const IntroStyled = styled.h2`
+  font-weight: 300;
+  color: ${({ theme }) => theme.colors.gray[500]};
+  padding: ${({ theme }) => theme.spacing.lg}px;
+  text-align: center;
+`;
+
 const App: NextPage = () => {
+  const { isDirty } = useStore();
   return (
     <AppStyled>
       <Head>
@@ -19,6 +28,16 @@ const App: NextPage = () => {
         />
       </Head>
       <Header />
+      {!isDirty ? (
+        <IntroStyled>
+          Please use the above search to search for a movie, series or episode.
+        </IntroStyled>
+      ) : (
+        <>
+          <ItemList />
+          <DetailView />
+        </>
+      )}
     </AppStyled>
     // <div className={styles.container}>
     //   <Head>
