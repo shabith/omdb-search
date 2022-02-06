@@ -6,25 +6,25 @@ import * as stories from './watch-list.stories';
 
 const { Default } = composeStories(stories);
 
-describe('List Item Component', () => {
+describe('Watch List Item Component', () => {
   it('Should render component successfully', () => {
     const { getByTestId } = render(<Default {...Default.args} />);
 
-    const listItem = getByTestId('list-item-comp');
+    const listItem = getByTestId('watch-list-item-comp');
     expect(listItem).toBeInTheDocument();
   });
 
   it('Should trigger onClick event with imdbId on click', async () => {
     const mockCallBack = jest.fn();
-    const { getByTestId } = render(
-      <Default {...Default.args} onClick={(id) => mockCallBack(id)} />,
-    );
+    const { container } = render(<Default {...Default.args} onClick={(id) => mockCallBack(id)} />);
 
-    const listItem = getByTestId('watch-list-item-comp');
-    userEvent.click(listItem);
-    await waitFor(() => {
-      expect(mockCallBack).toHaveBeenCalledWith(Default.args?.data?.imdbId);
-    });
+    const listItem = container.querySelector('.content-wrapper');
+    if (listItem) {
+      userEvent.click(listItem);
+      await waitFor(() => {
+        expect(mockCallBack).toHaveBeenCalledWith(Default.args?.data?.imdbId);
+      });
+    }
 
     jest.clearAllMocks();
   });

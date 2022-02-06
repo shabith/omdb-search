@@ -12,9 +12,9 @@ export default {
   component: ItemList,
 } as ComponentMeta<typeof ItemList>;
 
-const Template: ComponentStory<typeof ItemList> = () => (
+const Template: ComponentStory<typeof ItemList> = (args) => (
   <StoreContext.Provider value={storeDefaultValues}>
-    <ItemList />
+    <ItemList {...args} />
   </StoreContext.Provider>
 );
 export const Default = Template.bind({});

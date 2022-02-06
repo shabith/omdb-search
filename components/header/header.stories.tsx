@@ -12,9 +12,9 @@ export default {
   component: Header,
 } as ComponentMeta<typeof Header>;
 
-const Template: ComponentStory<typeof Header> = () => (
+const Template: ComponentStory<typeof Header> = (args) => (
   <StoreContext.Provider value={storeDefaultValues}>
-    <Header />
+    <Header {...args} />
   </StoreContext.Provider>
 );
 export const Default = Template.bind({});

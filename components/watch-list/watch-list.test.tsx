@@ -17,7 +17,7 @@ describe('Watch List Component', () => {
   it('Should called onItemClick when clicking on title item', async () => {
     const mockCallback = jest.fn();
     const { container } = render(<Default {...Default.args} onItemClick={mockCallback} />);
-    const firstArticle = container.querySelector('.content article');
+    const firstArticle = container.querySelector('.content article .content-wrapper');
     if (firstArticle) {
       userEvent.click(firstArticle);
       await waitFor(() => {

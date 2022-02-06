@@ -2,6 +2,8 @@ import { composeStories } from '@storybook/testing-react';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import '../../mocks/match-media-mock';
+
 import * as stories from './detail-view.stories';
 
 const { Default } = composeStories(stories);
