@@ -1,22 +1,37 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import Skeleton from 'react-loading-skeleton';
+import useInView from 'react-cool-inview';
+import { toast } from 'react-toastify';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 import Button from '@app/components/button';
 import BookMarkIcon from '@app/components/icon/bookmark';
+import { DotPulse } from '@app/components/loader';
 import SearchItem from '@app/components/list-item';
-import { ListItem } from '@app/types';
 import { mq } from '@app/utils/media-query';
 import { StoreSearchResults, useStore } from '@app/context/use-store';
+import { ListItem as ListItemType } from '@app/types';
+import { isDevelopment } from '@app/utils/environment';
+
+type InstructionsProps = {
+  warning?: boolean;
+  message?: string;
+};
+
+type ListItem = {
+  active?: boolean;
+} & ListItemType;
 
 const ItemListStyled = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   max-width: 450px;
-  height: 100vh;
+  overflow: auto;
   background: ${({ theme }) => theme.colors.white};
+  border-right: 1px solid ${({ theme }) => theme.colors.gray[500]};
+  border-left: 1px solid ${({ theme }) => theme.colors.gray[500]};
 
   .item-list-header {
     display: flex;
@@ -116,10 +131,16 @@ const InfoBoxStyled = styled.div<{ warning: boolean }>`
   text-align: center;
 `;
 
-type InstructionsProps = {
-  warning?: boolean;
-  message?: string;
-};
+const NextPageLoadingStyled = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: ${({ theme }) => theme.spacing.xl}px;
+  color: ${({ theme }) => theme.colors.gray[600]};
+  > div {
+    margin-left: 25px;
+  }
+`;
 
 const Instructions = ({
   warning = false,
@@ -129,40 +150,109 @@ const Instructions = ({
     {warning ? message : `Search by typing in the search box.`}
   </InfoBoxStyled>
 );
-const getResults = (searchResults: StoreSearchResults) => {
-  return searchResults.data && searchResults.data?.length > 0 ? (
-    <>
-      {searchResults.data.map((item) => (
-        <SearchItem key={item.id} data={item} />
-      ))}
-    </>
-  ) : (
-    <Instructions
-      warning={!searchResults.success}
-      message={!searchResults.success ? searchResults.error : undefined}
-    />
-  );
-};
 
 const searchResultsCount = ({ success, total }: StoreSearchResults) => {
   return success ? <div>{total} Results</div> : null;
 };
 
-export default function ItemList(): JSX.Element {
-  const { isSearching, searchResults } = useStore();
+type ItemListProps = {
+  onItemClick?: (imdbId: string) => void;
+  onClickWatchList?: () => void;
+  className?: string;
+};
+
+export default function ItemList({
+  onItemClick = () => {},
+  onClickWatchList = () => {},
+  className = '',
+}: ItemListProps): JSX.Element {
+  const { isSearching, initialResults, nextPage, fetchNextPage, setSelectedTitle } = useStore();
+  const [results, setResults] = useState<ListItem[]>([]);
+  const { observe } = useInView({
+    rootMargin: '50px 0px',
+    onEnter: async ({ unobserve, observe: observeAgain }) => {
+      unobserve();
+      try {
+        const nextResults = await fetchNextPage();
+        setResults((currentResults) => [...currentResults, ...(nextResults.data || [])]);
+        observeAgain();
+      } catch (error: any) {
+        toast(isDevelopment ? error.message : 'Something went wrong', {
+          type: 'error',
+        });
+      }
+    },
+  });
+
+  const handleItemClick = (imdbId: string) => {
+    onItemClick(imdbId);
+    const selectedItem = results.find((item) => item.imdbId === imdbId);
+    const updatedResults = results.map((item) => {
+      const newItem = item;
+      newItem.active = false;
+      if (newItem.imdbId === imdbId) {
+        newItem.active = true;
+      }
+      return newItem;
+    });
+
+    if (selectedItem) {
+      setSelectedTitle({
+        id: selectedItem.id,
+        imdbId: selectedItem.imdbId,
+        title: selectedItem.title,
+        type: selectedItem.type,
+        posterImage: selectedItem.posterImage,
+      });
+    }
+    setResults(updatedResults);
+  };
+
+  const getResults = (currentResults: ListItem[], initialValues: StoreSearchResults) => {
+    return currentResults.length > 0 ? (
+      currentResults.map((item) => (
+        <SearchItem key={item.id} data={item} active={item.active} onClick={handleItemClick} />
+      ))
+    ) : (
+      <Instructions
+        warning={!initialValues.success}
+        message={!initialValues.success ? initialValues.error : undefined}
+      />
+    );
+  };
+
+  useEffect(() => {
+    if (initialResults.data) {
+      setResults(initialResults.data);
+    }
+  }, [initialResults]);
 
   return (
-    <ItemListStyled data-testid="item-list-comp">
+    <ItemListStyled data-testid="item-list-comp" className={className}>
       <div className="item-list-header">
         <div className="search-results-count">
-          {isSearching ? <Skeleton width={30} inline /> : searchResultsCount(searchResults)}
+          {isSearching ? <Skeleton width={30} inline /> : searchResultsCount(initialResults)}
         </div>
         <div className="watchlist-button-wrapper">
-          <Button label="Go to Watchlist" icons={[<BookMarkIcon />]} />
+          <Button
+            label="Go to Watchlist"
+            icons={[<BookMarkIcon />]}
+            onClick={() => {
+              const updatedResults = results.map((item) => ({ ...item, active: false }));
+              setResults(updatedResults);
+              onClickWatchList();
+            }}
+          />
         </div>
       </div>
       <div className="item-list-wrapper">
-        {isSearching ? <ListItemSkeleton count={3} /> : getResults(searchResults)}
+        {isSearching ? <ListItemSkeleton count={3} /> : getResults(results, initialResults)}
+        {nextPage ? (
+          <NextPageLoadingStyled ref={observe}>
+            <DotPulse />
+            <div>loading more results...</div>
+          </NextPageLoadingStyled>
+        ) : null}
       </div>
     </ItemListStyled>
   );

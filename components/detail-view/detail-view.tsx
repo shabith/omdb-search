@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren } from 'react';
 import styled from '@emotion/styled';
 import Image from 'next/image';
 import Skeleton from 'react-loading-skeleton';
@@ -7,8 +7,13 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import Button from '@app/components/button';
 import BookmarkIcon from '@app/components/icon/bookmark';
 import BookmarkAddedIcon from '@app/components/icon/bookmark-added';
-import { mq } from '@app/utils/media-query';
 import useMediaQuery from '@app/lib/use-media-query';
+import useWatchList from '@app/context/use-watchlist';
+import { useStore } from '@app/context/use-store';
+import { mq } from '@app/utils/media-query';
+import { TitleTypes } from '@app/types';
+
+const imagePlaceholder = '/placeholder.jpg';
 
 const DetailViewStyled = styled.article`
   display: flex;
@@ -17,6 +22,7 @@ const DetailViewStyled = styled.article`
   background: ${({ theme }) => theme.colors.white};
   padding: ${({ theme }) => theme.spacing.lg}px;
   flex-direction: column;
+  overflow: auto;
 
   .back-btn-wrapper {
     display: flex;
@@ -44,6 +50,7 @@ const DetailViewStyled = styled.article`
       position: relative;
       margin-bottom: ${({ theme }) => theme.spacing.lg}px;
       align-self: center;
+      flex-shrink: 0;
 
       ${mq.md} {
         width: 200px;
@@ -229,84 +236,100 @@ function RatingSkeletonInlineWrapper({ children }: PropsWithChildren<unknown>) {
 }
 
 type DetailViewProps = {
-  loading?: boolean;
   onClose?: () => void;
+  className?: string;
 };
 
 export default function DetailView({
-  loading: isLoading = false,
   onClose = () => {},
+  className = '',
 }: DetailViewProps): JSX.Element {
-  const [loading] = useState(isLoading);
+  const { selectedTitle } = useStore();
+  const { getWatchListItem, addWatchListItem, removeWatchListItem } = useWatchList();
+
+  let isInWatchList;
+  if (selectedTitle) {
+    isInWatchList = getWatchListItem(selectedTitle?.imdbID);
+  }
+
+  const toggleWatchList = (add?: boolean, imdbId?: string) => {
+    if (add && selectedTitle) {
+      addWatchListItem({
+        id: selectedTitle.id,
+        imdbId: selectedTitle.imdbID,
+        posterImage: selectedTitle.poster || imagePlaceholder,
+        title: selectedTitle.title,
+        type: selectedTitle.type as TitleTypes,
+        year: selectedTitle.year || '',
+      });
+    } else if (imdbId !== undefined) {
+      removeWatchListItem(imdbId);
+    }
+  };
+
   const mediumScreenSizeUp = useMediaQuery(mq.md.split('@media ')[1]);
-  const title = 'Star Wars: Episode IV - A New Hope';
-  const year = '1977';
-  const posterImage =
-    'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg';
-  const rated = 'PG';
-  const genre = 'Action, Adventure, Fantasy';
-  const runtime = '121 min';
-  const actors = 'Mark Hamill, Harrison Ford, Carrie Fisher';
-  const plot =
-    'The Imperial Forces, under orders from cruel Darth Vader, hold Princess Leia hostage in their efforts to quell the rebellion against the Galactic Empire. Luke Skywalker and Han Solo, captain of the Millennium Falcon, work together with the companionable droid duo R2-D2 and C-3PO to rescue the beautiful princess, help the Rebel Alliance and restore freedom and justice to the Galaxy.';
-  const rating = [
-    {
-      source: 'Internet Movie Database',
-      value: '8.6/10',
-    },
-    {
-      source: 'Rotten Tomatoes',
-      value: '92%',
-    },
-    {
-      source: 'Metacritic',
-      value: '90/100',
-    },
-  ];
 
   return (
-    <DetailViewStyled data-testid="detail-view-comp">
+    <DetailViewStyled data-testid="detail-view-comp" className={className}>
       <div className="back-btn-wrapper">
         <Button label="Close" onClick={onClose} />
       </div>
       <div className="top-wrapper">
         <div className="image-wrapper">
-          <Image alt={title} src={posterImage} layout="fill" objectFit="cover" />
+          <Image
+            alt={selectedTitle?.title}
+            src={selectedTitle?.poster || imagePlaceholder}
+            layout="fill"
+            objectFit="cover"
+          />
         </div>
         <div className="top-content">
           <div className="button-wrapper">
             <Button
               label="Watchlist"
               toggleMode
-              isActive={false}
-              loading={loading}
+              isActive={!!isInWatchList}
+              loading={selectedTitle?.loading}
               icons={[<BookmarkIcon />, <BookmarkAddedIcon />]}
+              onClick={(active) => toggleWatchList(active, selectedTitle?.imdbID)}
             />
           </div>
           <div className="content-wrapper">
-            <h1>{title}</h1>
-            <div className={['sub-heading', loading ? '--loading' : ''].join(' ')}>
-              {loading ? (
+            <h1>{selectedTitle?.title}</h1>
+            <div className={['sub-heading', selectedTitle?.loading ? '--loading' : ''].join(' ')}>
+              {selectedTitle?.loading ? (
                 <Skeleton count={mediumScreenSizeUp ? 1 : 4} />
               ) : (
                 <>
-                  <div className="rated">
-                    <span>{rated}</span>
-                  </div>
-                  <div className="year">{year}</div>
-                  <div className="genre">{genre}</div>
-                  <div className="runtime">{runtime}</div>
+                  {selectedTitle?.rated !== undefined && (
+                    <div className="rated">
+                      <span>{selectedTitle?.rated}</span>
+                    </div>
+                  )}
+                  {selectedTitle?.year !== undefined && (
+                    <div className="year">{selectedTitle?.year}</div>
+                  )}
+                  {selectedTitle?.genre !== undefined && (
+                    <div className="genre">{selectedTitle?.genre}</div>
+                  )}
+                  {selectedTitle?.runtime !== undefined && (
+                    <div className="runtime">{selectedTitle?.runtime}</div>
+                  )}
                 </>
               )}
             </div>
-            <div className="actors">{loading ? <Skeleton /> : actors}</div>
+            <div className="actors">
+              {selectedTitle?.loading ? <Skeleton /> : selectedTitle?.actors}
+            </div>
           </div>
         </div>
       </div>
-      <div className="mid-wrapper">{loading ? <Skeleton count={3} /> : plot}</div>
+      <div className="mid-wrapper">
+        {selectedTitle?.loading ? <Skeleton count={3} /> : selectedTitle?.plot}
+      </div>
       <div className="bottom-wrapper">
-        <div className={['rating-wrapper', loading ? '--loading' : ''].join(' ')}>
-          {loading ? (
+        <div className={['rating-wrapper', selectedTitle?.loading ? '--loading' : ''].join(' ')}>
+          {selectedTitle?.loading ? (
             <Skeleton
               count={3}
               inline={mediumScreenSizeUp}
@@ -314,14 +337,12 @@ export default function DetailView({
               wrapper={RatingSkeletonInlineWrapper}
             />
           ) : (
-            <>
-              {rating.map((rate) => (
-                <div className="rating-element" key={rate.source}>
-                  <div className="rating-value">{rate.value}</div>
-                  <div className="rating-source">{rate.source}</div>
-                </div>
-              ))}
-            </>
+            selectedTitle?.ratings?.map((rate) => (
+              <div className="rating-element" key={rate.source}>
+                <div className="rating-value">{rate.value}</div>
+                <div className="rating-source">{rate.source}</div>
+              </div>
+            ))
           )}
         </div>
       </div>

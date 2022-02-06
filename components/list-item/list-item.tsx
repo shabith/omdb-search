@@ -47,6 +47,7 @@ const ListItemStyled = styled.article<{ active: boolean }>`
         font-size: 18px;
       }
     }
+
     time {
       color: ${({ theme }) => theme.colors.gray[400]};
       font-size: ${({ theme }) => theme.fonts.size.s}px;

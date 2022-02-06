@@ -1,15 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 
 import Search from '@app/components/search';
 import YearFilter from '@app/components/years-filter';
 import TypeFilter from '@app/components/type-filter';
 import { mq } from '@app/utils/media-query';
-import { StoreSearch, useStore } from '@app/context/use-store';
+import { useStore } from '@app/context/use-store';
 import { TitleTypes } from '@app/types';
 
 const HeaderStyled = styled.header`
   display: flex;
+  width: 100%;
   flex-direction: row;
   justify-content: center;
   background-color: ${({ theme }) => theme.colors.gray[900]};
@@ -31,7 +32,11 @@ const HeaderStyled = styled.header`
   }
 `;
 
-export default function Header(): JSX.Element {
+type HeaderProps = {
+  className?: string;
+};
+
+export default function Header({ className }: HeaderProps): JSX.Element {
   const { searchTitle, initialValues } = useStore();
   const [query, setQuery] = useState<string>('');
   const [year, setYear] = useState<number[]>(initialValues.year || []);
@@ -48,7 +53,7 @@ export default function Header(): JSX.Element {
   }, [query, year, type, searchTitle]);
 
   return (
-    <HeaderStyled data-testid="header-comp">
+    <HeaderStyled data-testid="header-comp" className={['header-component', className].join(' ')}>
       <div className="container">
         <Search className="search" delay={400} onChange={(value) => setQuery(value)} />
         <YearFilter

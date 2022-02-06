@@ -10,10 +10,11 @@ const TypeFilterStyled = styled.div`
   display: flex;
   width: calc(100% - ${({ theme }) => theme.spacing.m * 2}px);
   margin: ${({ theme }) => theme.spacing.m}px;
-  flex-direction: column;
+  flex-direction: row;
 
   ${mq.md} {
     width: 320px;
+    flex-direction: column;
   }
 
   .label {
@@ -21,10 +22,11 @@ const TypeFilterStyled = styled.div`
     text-transform: uppercase;
     font-size: ${({ theme }) => theme.fonts.size.s}px;
     margin-bottom: ${({ theme }) => theme.spacing.lg}px;
-    text-align: center;
+    text-align: left;
+    margin-right: ${({ theme }) => theme.spacing.m}px;
 
     ${mq.md} {
-      text-align: left;
+      margin-right: 0;
       font-size: ${({ theme }) => theme.fonts.size.m}px;
     }
   }
@@ -32,6 +34,7 @@ const TypeFilterStyled = styled.div`
   .type-filter-wrapper {
     display: flex;
     flex-direction: row;
+    flex: 1;
     justify-content: space-between;
   }
 `;

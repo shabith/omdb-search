@@ -8,12 +8,13 @@ import { mq } from '@app/utils/media-query';
 const YearsFilterStyled = styled.div`
   display: flex;
   width: calc(100% - ${({ theme }) => theme.spacing.m * 2}px);
-  flex-direction: column;
+  flex-direction: row;
   margin: ${({ theme }) => theme.spacing.m}px;
   margin-bottom: ${({ theme }) => theme.spacing.lg}px;
 
   ${mq.md} {
     width: 225px;
+    flex-direction: column;
   }
 
   .label {
@@ -21,10 +22,13 @@ const YearsFilterStyled = styled.div`
     text-transform: uppercase;
     font-size: ${({ theme }) => theme.fonts.size.s}px;
     margin-bottom: ${({ theme }) => theme.spacing.lg}px;
-    text-align: center;
+    margin-right: ${({ theme }) => theme.spacing.m}px;
+    text-align: left;
 
     ${mq.md} {
+      display: block;
       text-align: left;
+      margin-right: 0;
       font-size: ${({ theme }) => theme.fonts.size.m}px;
     }
   }
@@ -81,7 +85,7 @@ const SliderThumb = styled.div<{ isDragged: boolean }>`
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background-color: ${({ theme }) => theme.colors.gray[500]};
+  background-color: ${({ theme }) => theme.colors.gray[600]};
   display: flex;
   justify-content: center;
   align-items: center;

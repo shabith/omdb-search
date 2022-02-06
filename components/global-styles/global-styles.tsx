@@ -23,6 +23,12 @@ const GlobalStyles = () => {
         * {
           box-sizing: border-box;
         }
+
+        #__next {
+          display: flex;
+          min-height: 100vh;
+          flex-direction: column;
+        }
       `}
     />
   );

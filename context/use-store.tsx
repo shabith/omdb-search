@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { handleError } from '@app/utils/handle-errors';
 import {
   TitleTypes,
   ListItem,
@@ -8,6 +9,7 @@ import {
   ApiResponseSuccessType,
   SearchResponseData,
   DetailResponseData,
+  DetailItem,
 } from '@app/types';
 
 export type StoreSearch = {
@@ -24,6 +26,18 @@ export type StoreSearchResults = {
   error?: string;
 };
 
+type StoreSelectedTitle = {
+  loading: boolean;
+} & DetailItem;
+
+type SelectedTypeProps = {
+  id: string;
+  imdbId: string;
+  title: string;
+  type: keyof typeof TitleTypes;
+  posterImage?: string;
+};
+
 type StoreProviderValueType = {
   initialValues: StoreSearch;
   search: StoreSearch;
@@ -32,11 +46,12 @@ type StoreProviderValueType = {
   isDirty: boolean;
   isSearching: boolean;
   isNextPageLoading: boolean;
-  searchResults: StoreSearchResults;
-  fetchNextPage: () => void;
+  initialResults: StoreSearchResults;
+  fetchNextPage: () => Promise<StoreSearchResults>;
+  setSelectedTitle: (props: SelectedTypeProps) => void;
+  selectedTitle?: StoreSelectedTitle;
+  nextPage: number;
 };
-
-const isDevelopment = process.env.NODE_ENV === 'development';
 
 const StoreContext = createContext<StoreProviderValueType>({} as StoreProviderValueType);
 
@@ -57,108 +72,150 @@ function useProviderStore(): StoreProviderValueType {
   const [isSearching, setIsSearching] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchResults, setSearchResults] = useState<StoreSearchResults>(initialSearchResultValues);
+  const [nextPage, setNextPage] = useState(0);
+  const [selectedTitle, setSelectedTitle] = useState<StoreSelectedTitle | undefined>(undefined);
+  const [initialSearchResults, setInitialSearchResults] =
+    useState<StoreSearchResults>(initialSearchResultValues);
   const abortController = useRef<AbortController>();
 
-  const searchTitle = useCallback(
-    async (data: StoreSearch) => {
-      try {
-        console.log(data);
-        setSearchResults(initialSearchResultValues);
-        setStoreSearch(data);
-        setIsSearching(true);
-        setIsDirty(true);
-        if (abortController.current) {
-          abortController.current.abort();
-        }
-        abortController.current = new AbortController();
-        const response = await fetch(getSearchURL(data), {
-          method: 'GET',
-          signal: abortController.current?.signal,
-        });
-        const resultData = (await response.json()) as ApiResponse<
-          ApiResponseSuccessType<SearchResponseData>
-        >;
-
-        if (!resultData.success) {
-          setIsPageLoading(false);
-          setIsSearching(false);
-          setSearchResults({
-            ...initialSearchResultValues,
-            success: false,
-            error: resultData.error.message,
-          });
-        } else {
-          setSearchResults({
-            data: resultData.data.results,
-            nextPage: resultData.data.nextPage,
-            total: resultData.data.total,
-            success: true,
-          });
-          setIsSearching(false);
-          setCurrentPage(resultData.data.currentPage);
-        }
-      } catch (error: any) {
-        if (error.message.includes('aborted')) {
-          console.info('requesting a new url...');
-        } else {
-          setIsPageLoading(false);
-          setIsSearching(false);
-          toast(isDevelopment ? error.message : 'Something went wrong', {
-            type: 'error',
-          });
-        }
-      }
-    },
-    [isDirty],
-  );
-
-  const fetchNextPage = async () => {
+  const searchTitle = useCallback(async (data: StoreSearch) => {
     try {
-      if (searchResults.nextPage === 0) {
-        toast('No pages left', {
-          type: 'error',
-        });
-      } else {
-        setIsPageLoading(true);
-        if (abortController.current) {
-          abortController.current.abort();
-        }
-        abortController.current = new AbortController();
-        const response = await fetch(getSearchURL(search, currentPage + 1), {
-          method: 'GET',
-          signal: abortController.current?.signal,
-        });
-        const resultData = (await response.json()) as ApiResponse<
-          ApiResponseSuccessType<SearchResponseData>
-        >;
-        if (!resultData.success) {
-          toast(resultData.error.message, {
-            type: 'error',
-          });
-        } else {
-          setSearchResults({
-            data: [...(searchResults.data ? searchResults.data : []), ...resultData.data.results],
-            nextPage: resultData.data.nextPage,
-            total: resultData.data.total,
-            success: true,
-          });
-
-          setIsPageLoading(false);
-          setCurrentPage(resultData.data.currentPage);
-        }
+      setCurrentPage(0);
+      setNextPage(0);
+      setInitialSearchResults(initialSearchResultValues);
+      setStoreSearch(data);
+      setIsSearching(true);
+      setIsDirty(true);
+      if (abortController.current) {
+        abortController.current.abort();
       }
-    } catch (error: any) {
-      if (error.message.includes('aborted')) {
-        console.info('requesting a new url...');
-      } else {
+      abortController.current = new AbortController();
+      const response = await fetch(getSearchURL(data), {
+        method: 'GET',
+        signal: abortController.current?.signal,
+      });
+      const resultData = (await response.json()) as ApiResponse<
+        ApiResponseSuccessType<SearchResponseData>
+      >;
+
+      if (!resultData.success) {
         setIsPageLoading(false);
         setIsSearching(false);
-        toast(isDevelopment ? error.message : 'Something went wrong', {
+        setNextPage(0);
+        setInitialSearchResults({
+          ...initialSearchResultValues,
+          success: false,
+          error: resultData.error.message,
+        });
+      } else {
+        setInitialSearchResults({
+          data: resultData.data.results,
+          nextPage: resultData.data.nextPage,
+          total: resultData.data.total,
+          success: true,
+        });
+        setIsSearching(false);
+        setNextPage(resultData.data.nextPage);
+        setCurrentPage(resultData.data.currentPage);
+      }
+    } catch (error: any) {
+      const errMsg = handleError(error.message);
+      if (errMsg) {
+        setIsPageLoading(false);
+        setIsSearching(false);
+        setNextPage(0);
+        toast(errMsg, {
           type: 'error',
         });
       }
     }
+  }, []);
+
+  const setCurrentSelectedTitle = async (props: SelectedTypeProps) => {
+    setSelectedTitle({
+      loading: true,
+      title: props.title,
+      imdbID: props.imdbId,
+      poster: props.posterImage,
+      type: props.type,
+      id: props.id,
+    });
+
+    try {
+      abortController.current = new AbortController();
+      const response = await fetch(`/api/omdb/get?imdbId=${props.imdbId}`, {
+        method: 'GET',
+        signal: abortController.current?.signal,
+      });
+      const resultData = (await response.json()) as ApiResponse<
+        ApiResponseSuccessType<DetailResponseData>
+      >;
+
+      if (!resultData.success) {
+        toast('Sorry!, Title not found', {
+          type: 'error',
+        });
+      } else {
+        setSelectedTitle({
+          loading: false,
+          ...resultData.data.result,
+        });
+      }
+    } catch (error: any) {
+      const errMsg = handleError(error.message);
+      if (errMsg) {
+        toast(errMsg, {
+          type: 'error',
+        });
+      }
+    }
+  };
+
+  const fetchNextPage = async (): Promise<StoreSearchResults> => {
+    let returnData: StoreSearchResults = initialSearchResultValues;
+    try {
+      setIsPageLoading(true);
+      if (abortController.current) {
+        abortController.current.abort();
+      }
+      abortController.current = new AbortController();
+      const response = await fetch(getSearchURL(search, currentPage + 1), {
+        method: 'GET',
+        signal: abortController.current?.signal,
+      });
+      const resultData = (await response.json()) as ApiResponse<
+        ApiResponseSuccessType<SearchResponseData>
+      >;
+      setIsSearching(false);
+      if (!resultData.success) {
+        setNextPage(0);
+        toast(resultData.error.message, {
+          type: 'error',
+        });
+      } else {
+        returnData = {
+          data: resultData.data.results,
+          nextPage: resultData.data.nextPage,
+          total: resultData.data.total,
+          success: true,
+        };
+        setNextPage(resultData.data.nextPage);
+        setIsPageLoading(false);
+        setCurrentPage(resultData.data.currentPage);
+      }
+    } catch (error: any) {
+      const errMsg = handleError(error.message);
+      if (errMsg) {
+        setIsPageLoading(false);
+        setIsSearching(false);
+        setNextPage(0);
+        toast(errMsg, {
+          type: 'error',
+        });
+      }
+    }
+
+    return returnData;
   };
 
   return {
@@ -168,9 +225,12 @@ function useProviderStore(): StoreProviderValueType {
     isDirty,
     isSearching,
     isNextPageLoading: isPageLoading,
-    searchResults,
+    initialResults: initialSearchResults,
     fetchNextPage,
     currentPage,
+    nextPage,
+    selectedTitle,
+    setSelectedTitle: setCurrentSelectedTitle,
   };
 }
 

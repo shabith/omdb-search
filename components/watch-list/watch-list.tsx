@@ -1,22 +1,41 @@
 import styled from '@emotion/styled';
 
 import Button from '@app/components/button';
-import ListItemComp from '@app/components/list-item';
+import WatchListItem from '@app/components/watch-list-item';
 import { ListItem } from '@app/types';
 import { mq } from '@app/utils/media-query';
+import useWatchList from '@app/context/use-watchlist';
 
 const WatchListStyled = styled.div`
   display: flex;
   flex-direction: column;
   background: ${({ theme }) => theme.colors.white};
+  overflow: auto;
 
   .header {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-end;
+    position: sticky;
+    top: 0px;
+    z-index: 20;
+    background: ${({ theme }) => theme.colors.white};
+
     padding: ${({ theme }) => theme.spacing.m}px;
 
+    ${mq.md} {
+      padding-left: ${({ theme }) => theme.spacing.xl}px;
+    }
+
+    .go-back-btn {
+      ${mq.md} {
+        margin-bottom: 8px;
+      }
+    }
+
     h2 {
+      margin-top: 20px;
+      margin-bottom: 0;
       padding-left: ${({ theme }) => theme.spacing.m}px;
       font-size: ${({ theme }) => theme.fonts.size.xl}px;
 
@@ -26,97 +45,21 @@ const WatchListStyled = styled.div`
       }
     }
   }
+
+  .content {
+    display: grid;
+    position: relative;
+    z-index: 10;
+    padding: ${({ theme }) => theme.spacing.xxl}px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: ${({ theme }) => theme.spacing.xl}px;
+  }
 `;
 
 type WatchListProps = {
   onGoBack: () => void;
+  onItemClick: (item: ListItem) => void;
 };
-
-// const watchListItems: ListItem[] = [];
-
-const watchListItems: ListItem[] = [
-  {
-    id: 'tt0076759',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-  {
-    id: 'tt0076760',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-  {
-    id: 'tt0076761',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-  {
-    id: 'tt0076762',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-  {
-    id: 'tt0076763',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-  {
-    id: 'tt0076764',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-  {
-    id: 'tt0076765',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-  {
-    id: 'tt0076766',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-  {
-    id: 'tt0076767',
-    title: 'Star Wars: Episode IV - A New Hope',
-    year: '1977',
-    type: 'movie',
-    imdbId: 'tt0076759',
-    posterImage:
-      'https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg',
-  },
-];
 
 const NoWatchListItems = styled.div`
   font-size: ${({ theme }) => theme.fonts.size.m}px;
@@ -128,20 +71,24 @@ const NoWatchListItems = styled.div`
   text-align: center;
 `;
 
-export default function WatchList({ onGoBack }: WatchListProps): JSX.Element {
-  const handleClickEvent = (id: string) => {
-    console.log(id);
+export default function WatchList({ onGoBack, onItemClick }: WatchListProps): JSX.Element {
+  const { watchList } = useWatchList();
+  const handleClickEvent = (imdbId: string) => {
+    const clickedItem = watchList.find((item) => item.imdbId === imdbId);
+    if (clickedItem) {
+      onItemClick(clickedItem);
+    }
   };
   return (
     <WatchListStyled data-testid="watch-list-comp">
       <div className="header">
-        <Button label="< Go Back" onClick={onGoBack} />
+        <Button label="< Go Back" className="go-back-btn" onClick={onGoBack} />
         <h2>Watch List</h2>
       </div>
       <div className="content">
-        {watchListItems.length > 0 ? (
-          watchListItems.map((item) => (
-            <ListItemComp key={item.id} data={item} onClick={handleClickEvent} />
+        {watchList.length > 0 ? (
+          watchList.map((item) => (
+            <WatchListItem key={item.id} data={item} onClick={handleClickEvent} />
           ))
         ) : (
           <NoWatchListItems>No watch list item found.</NoWatchListItems>
