@@ -19,8 +19,8 @@ const WatchListItemStyled = styled.article`
   flex-direction: column;
 
   .image-wrapper {
-    width: 75px;
-    height: 113px;
+    width: 100px;
+    height: 150px;
     margin: 0 auto;
     position: relative;
     overflow: hidden;
@@ -34,7 +34,7 @@ const WatchListItemStyled = styled.article`
     .close-btn {
       position: absolute;
       z-index: 1;
-      transform: scale(0.25);
+      transform: scale(0.3);
       top: -10px;
       right: -10px;
       cursor: pointer;

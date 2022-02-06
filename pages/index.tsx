@@ -17,7 +17,7 @@ const AppStyled = styled.div`
   height: 100vh;
   justify-items: center;
   grid-template-columns: 1fr;
-  grid-template-rows: 144px auto;
+  grid-template-rows: 174px auto;
   align-items: flex-start;
 
   ${mq.md} {
