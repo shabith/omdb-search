@@ -49,7 +49,7 @@ const ItemListStyled = styled.div`
     }
 
     .search-results-count {
-      color: ${({ theme }) => theme.colors.gray[600]};
+      color: ${({ theme }) => theme.colors.gray[900]};
       font-size: ${({ theme }) => theme.fonts.size.s}px;
       font-weight: 300;
       text-transform: uppercase;

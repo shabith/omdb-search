@@ -6,7 +6,12 @@ import Search from '.';
 export default {
   title: 'Design System/Search',
   component: Search,
-  parameters: { actions: { argTypesRegex: '^on.*' } },
+  parameters: {
+    actions: { argTypesRegex: '^on.*' },
+    backgrounds: {
+      default: 'dark',
+    },
+  },
 } as ComponentMeta<typeof Search>;
 
 const Template: ComponentStory<typeof Search> = (args) => <Search {...args} />;

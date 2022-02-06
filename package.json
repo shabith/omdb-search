@@ -25,6 +25,7 @@
     "react-loading-skeleton": "^3.0.2",
     "react-range": "^1.8.12",
     "react-toastify": "^8.1.1",
+    "storybook-addon-mock": "^2.0.2",
     "use-persisted-state": "^0.3.3"
   },
   "devDependencies": {

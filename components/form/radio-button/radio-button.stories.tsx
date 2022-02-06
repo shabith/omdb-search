@@ -6,6 +6,11 @@ import { RadioButton } from '.';
 export default {
   title: 'Design System/Radio Button',
   component: RadioButton,
+  parameters: {
+    backgrounds: {
+      default: 'dark',
+    },
+  },
 } as ComponentMeta<typeof RadioButton>;
 
 const Template: ComponentStory<typeof RadioButton> = (args) => <RadioButton {...args} />;

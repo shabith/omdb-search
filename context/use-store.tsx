@@ -26,7 +26,7 @@ export type StoreSearchResults = {
   error?: string;
 };
 
-type StoreSelectedTitle = {
+export type StoreSelectedTitle = {
   loading: boolean;
 } & DetailItem;
 
@@ -38,7 +38,7 @@ type SelectedTypeProps = {
   posterImage?: string;
 };
 
-type StoreProviderValueType = {
+export type StoreProviderValueType = {
   initialValues: StoreSearch;
   search: StoreSearch;
   currentPage: number;
@@ -53,7 +53,7 @@ type StoreProviderValueType = {
   nextPage: number;
 };
 
-const StoreContext = createContext<StoreProviderValueType>({} as StoreProviderValueType);
+export const StoreContext = createContext<StoreProviderValueType>({} as StoreProviderValueType);
 
 const getSearchURL = (data: StoreSearch, page = 1) =>
   `/api/omdb/search?query=${data.query}&type=${data.type}&year=${data.year[0]}&page=${page}`;

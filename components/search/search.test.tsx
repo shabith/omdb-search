@@ -27,8 +27,8 @@ describe('Search Component', () => {
   it('Should have provided class name', () => {
     const { container } = render(<Default {...Default.args} className="custom" />);
 
-    const searchInput = container.querySelector('.custom');
-    expect(searchInput).toBeInTheDocument();
+    const searchInput = container.querySelectorAll('.custom');
+    expect(searchInput.length).toBe(1);
   });
 
   it('Should call onChange after 300ms after typing', async () => {

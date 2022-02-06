@@ -6,6 +6,11 @@ import YearsFilter from '.';
 export default {
   title: 'Design System/Years Filter',
   component: YearsFilter,
+  parameters: {
+    backgrounds: {
+      default: 'dark',
+    },
+  },
 } as ComponentMeta<typeof YearsFilter>;
 
 const Template: ComponentStory<typeof YearsFilter> = (args) => <YearsFilter {...args} />;

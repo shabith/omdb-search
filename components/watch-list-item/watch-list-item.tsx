@@ -69,7 +69,7 @@ const WatchListItemStyled = styled.article`
       font-weight: 300;
       margin-bottom: ${({ theme }) => theme.spacing.xs}px;
       font-size: ${({ theme }) => theme.fonts.size.m}px;
-      color: ${({ theme }) => theme.colors.gray[600]};
+      color: ${({ theme }) => theme.colors.gray[700]};
 
       ${mq.md} {
         margin-bottom: ${({ theme }) => theme.spacing.s}px;
@@ -78,8 +78,9 @@ const WatchListItemStyled = styled.article`
     }
 
     time {
-      color: ${({ theme }) => theme.colors.gray[400]};
+      color: ${({ theme }) => theme.colors.gray[700]};
       font-size: ${({ theme }) => theme.fonts.size.s}px;
+      font-weight: 400;
 
       ${mq.md} {
         font-size: ${({ theme }) => theme.fonts.size.m}px;

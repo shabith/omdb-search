@@ -12,4 +12,12 @@ describe('Header Component', () => {
     const header = getByTestId('header-comp');
     expect(header).toBeInTheDocument();
   });
+
+  it('Should add provided class to the component', () => {
+    const { container } = render(<Default {...Default.args} className="header-special-class" />);
+
+    const classSelector = container.querySelectorAll('.header-special-class');
+
+    expect(classSelector.length).toBe(1);
+  });
 });

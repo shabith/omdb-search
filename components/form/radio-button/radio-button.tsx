@@ -10,7 +10,7 @@ const RadioButtonStyled = styled.div`
     position: absolute;
     opacity: 0;
     + label {
-      color: ${({ theme }) => theme.colors.gray[300]};
+      color: ${({ theme }) => theme.colors.white};
       font-weight: 400;
       font-size: ${({ theme }) => theme.fonts.size.s}px;
       padding-left: ${({ theme }) => theme.spacing.xl}px;

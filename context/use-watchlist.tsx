@@ -2,7 +2,9 @@ import createPersistedState from 'use-persisted-state';
 
 import { ListItem } from '@app/types';
 
-const useWatchListState = createPersistedState<ListItem[]>('omdb_search_app_watchlist');
+export const localStoreId = 'omdb_search_app_watchlist';
+
+const useWatchListState = createPersistedState<ListItem[]>(localStoreId);
 
 const useWatchList = (initialValue: ListItem[] = []) => {
   const [watchList, setWatchList] = useWatchListState(initialValue);

@@ -18,7 +18,7 @@ const TypeFilterStyled = styled.div`
   }
 
   .label {
-    color: ${({ theme }) => theme.colors.gray[300]};
+    color: ${({ theme }) => theme.colors.white};
     text-transform: uppercase;
     font-size: ${({ theme }) => theme.fonts.size.s}px;
     margin-bottom: ${({ theme }) => theme.spacing.lg}px;

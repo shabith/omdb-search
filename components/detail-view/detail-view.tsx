@@ -160,7 +160,7 @@ const DetailViewStyled = styled.article`
     line-height: ${({ theme }) => theme.fonts.lineHeight.medium};
     padding: ${({ theme }) => theme.spacing.lg}px 0;
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray[400]};
-    color: ${({ theme }) => theme.colors.gray[600]};
+    color: ${({ theme }) => theme.colors.gray[900]};
   }
 
   .bottom-wrapper {
@@ -189,7 +189,7 @@ const DetailViewStyled = styled.article`
         display: flex;
         align-items: center;
         flex-direction: column;
-        color: ${({ theme }) => theme.colors.gray[600]};
+        color: ${({ theme }) => theme.colors.gray[900]};
         font-weight: 300;
         font-size: ${({ theme }) => theme.fonts.size.m}px;
         text-align: center;

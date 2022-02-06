@@ -13,6 +13,7 @@ module.exports = {
     '@storybook/addon-viewport',
     '@storybook/addon-measure',
     'storybook-addon-next',
+    'storybook-addon-mocks/register'
   ],
   framework: '@storybook/react',
   typescript: {

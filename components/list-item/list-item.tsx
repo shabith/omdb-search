@@ -40,7 +40,7 @@ const ListItemStyled = styled.article<{ active: boolean }>`
       font-weight: 300;
       margin-bottom: ${({ theme }) => theme.spacing.xs}px;
       font-size: ${({ theme }) => theme.fonts.size.m}px;
-      color: ${({ theme }) => theme.colors.gray[600]};
+      color: ${({ theme }) => theme.colors.gray[900]};
 
       ${mq.md} {
         margin-bottom: ${({ theme }) => theme.spacing.s}px;
@@ -49,7 +49,7 @@ const ListItemStyled = styled.article<{ active: boolean }>`
     }
 
     time {
-      color: ${({ theme }) => theme.colors.gray[400]};
+      color: ${({ theme }) => theme.colors.gray[700]};
       font-size: ${({ theme }) => theme.fonts.size.s}px;
 
       ${mq.md} {
